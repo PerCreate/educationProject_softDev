@@ -1,0 +1,10 @@
+const Checkbox = ({ classes, callback, name, checked }) => {
+	return (
+		<div className={`Checkbox ${classes}`}>
+			<input type="checkbox" checked={checked} onChange={callback} id="box" />
+			<label htmlFor="box">{name}</label>
+		</div>
+	);
+};
+
+export default Checkbox;
