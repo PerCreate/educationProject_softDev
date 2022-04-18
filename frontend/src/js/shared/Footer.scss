@@ -1,0 +1,23 @@
+.Footer {
+	position: relative;
+	margin-top: 94px;
+	padding: 60px 215px;
+	background: #2f303a;
+
+	&-logo {
+		width: 173px;
+		height: 31px;
+		background: url("../../img/footer_logo.svg") no-repeat;
+		cursor: pointer;
+	}
+
+	a {
+		opacity: 0;
+		color: white;
+		text-decoration: none;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+}

@@ -1,0 +1,22 @@
+.Home {
+	&-overlay {
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+
+		background: url("../../img/main_header.png") no-repeat;
+		background-size: cover;
+		height: 600px;
+	}
+	h1 {
+		font-weight: 900;
+		font-size: 44px;
+		line-height: 60px;
+		text-align: center;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+
+		color: #ffffff;
+	}
+}

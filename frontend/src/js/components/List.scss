@@ -1,0 +1,17 @@
+.List {
+	margin-top: 94px;
+
+	&-header {
+		margin-bottom: 50px;
+		font-weight: 700;
+		font-size: 36px;
+		line-height: 42px;
+		text-align: center;
+	}
+
+	&-items {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 30px;
+	}
+}

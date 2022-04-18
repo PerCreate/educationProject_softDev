@@ -1,0 +1,29 @@
+.Nav {
+	display: flex;
+	justify-content: space-between;
+	padding-top: 25px;
+	padding-bottom: 25px;
+
+	&-logo {
+		width: 173px;
+		height: 31px;
+		background: url("../../img/nav_logo.png") no-repeat;
+		cursor: pointer;
+	}
+
+	&-list {
+		display: flex;
+		justify-content: space-between;
+		gap: 40px;
+
+		li {
+			font-size: 18px;
+			font-weight: 500;
+			&:hover {
+				color: #2196f3;
+				cursor: pointer;
+				border-bottom: 2px solid #2196f3;
+			}
+		}
+	}
+}

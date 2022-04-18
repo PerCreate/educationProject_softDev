@@ -1,0 +1,40 @@
+.Skill {
+	width: 270px;
+
+	.img {
+		width: 270px;
+		height: 120px;
+		margin-bottom: 30px;
+
+		&[count="1"] {
+			background: url("../../../img/skill_1.svg");
+		}
+
+		&[count="2"] {
+			background: url("../../../img/skill_2.svg");
+		}
+
+		&[count="3"] {
+			background: url("../../../img/skill_3.svg");
+		}
+
+		&[count="4"] {
+			background: url("../../../img/skill_4.svg");
+		}
+	}
+
+	.header {
+		font-size: 14px;
+		font-weight: 700;
+		margin-bottom: 10px;
+		text-transform: uppercase;
+	}
+
+	.text {
+		font-weight: 400;
+		font-size: 14px;
+		line-height: 24px;
+		letter-spacing: 0.03em;
+		color: #757575;
+	}
+}
