@@ -12,8 +12,8 @@ const SendApplication = ({ onSubmit }) => {
 	return (
 		<div className="SendApplication">
 			<form>
-				<Input type="name" name="Имя" value={name} onChange={setName} />
-				<Input type="phone" name="Телефон" value={phone} onChange={setPhone} />
+				<Input required type="name" name="Имя" value={name} onChange={setName} />
+				<Input required type="phone" name="Телефон" value={phone} onChange={setPhone} />
 				<Input type="email" name="Почта" value={email} onChange={setEmail} />
 				<Input
 					textarea

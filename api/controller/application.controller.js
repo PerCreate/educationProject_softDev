@@ -1,4 +1,4 @@
-const db = require('../db')
+const db = require('../db');
 
 class Application {
 	async createApplication(req, res, next) {
@@ -25,7 +25,7 @@ class Application {
 			return res.status(400).send({ error: 'Min length of the name is 8.' });
 		}
 
-		const newApplication = await db.query(`INSERT INTO application (name, phone, email, comment) values ($1, $2, $3, $4) RETURNING *`, [name,phone,email,comment]);
+		const newApplication = await db.query(`INSERT INTO application (name, phone, email, comment) values ($1, $2, $3, $4) RETURNING *`, [name, phone, email, comment]);
 
 		res.send({ created: true, newApplication: newApplication.rows[0] });
 	}

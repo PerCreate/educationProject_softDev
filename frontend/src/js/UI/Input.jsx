@@ -7,6 +7,7 @@ const Input = ({
 	onChange,
 	placeholder = null,
 	textarea = false,
+	required = false,
 }) => {
 	// working доделать названия инпутов
 	return (
@@ -14,6 +15,7 @@ const Input = ({
 			<div className="name">{name}</div>
 			{textarea ? (
 				<textarea
+					required={required}
 					placeholder={placeholder}
 					id={type + value}
 					type={type}
@@ -23,6 +25,7 @@ const Input = ({
 				></textarea>
 			) : (
 				<input
+					required={required}
 					placeholder={placeholder}
 					id={type + value}
 					type={type}

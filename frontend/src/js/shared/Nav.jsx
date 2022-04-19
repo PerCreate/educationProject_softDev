@@ -12,6 +12,8 @@ const Nav = () => {
 				<li className="item">Студия</li>
 				<li className="item">Портфолио</li>
 				<li className="item">Контакты</li>
+				<li className="item">Зарегистрироваться</li>
+				<li className="item">Войти</li>
 			</ul>
 			<Button text="Получить рекомендацию" cb={getRecommendation} />
 		</nav>
