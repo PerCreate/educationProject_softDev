@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+
 import List from "../components/List";
 import Example from "../components/ListItem/Example";
 import Skill from "../components/ListItem/Skill";
@@ -6,6 +8,7 @@ import SendApplication from "../shared/Windows/SendApplication";
 import Window from "../shared/Windows/Window";
 import Button from "../UI/Button";
 import "./Home.scss";
+import { getURL } from "../Utils";
 
 const skillItems = [
 	{
@@ -38,16 +41,35 @@ const exampleItems = [
 
 const Home = ({ children }) => {
 	const [isSendWindowOpen, setWindowState] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+
+	const URL = getURL();
 
 	const getService = () => {
 		setWindowState(true);
 	};
 
+	const sendUserData = async (userData) => {
+		try {
+			const data = await axios.post(URL + "/api/createApplication", userData);
+			console.log(data);
+			setWindowState(false);
+		} catch (e) {
+			setErrorMessage(e.response.data.error);
+			console.log('Error: ', e.response.data.error);
+		}
+	};
+
 	return (
 		<main className="Home">
 			{isSendWindowOpen && (
-				<Window onClose={() => setWindowState(false)}>
-					<SendApplication />
+				<Window
+					header="Оставьте свои данные, мы вам перезвоним"
+					onClose={() => setWindowState(false)}
+					errorMessage={errorMessage}
+					onCloseError={() => setErrorMessage("")}
+				>
+					<SendApplication onSubmit={sendUserData} />
 				</Window>
 			)}
 
@@ -57,13 +79,13 @@ const Home = ({ children }) => {
 			</div>
 			<List
 				items={skillItems.map(({ header, count, text }) => (
-					<Skill header={header} count={count} text={text} />
+					<Skill key={text + count + header} header={header} count={count} text={text} />
 				))}
 			/>
 			<List
 				header="Чем мы занимаемся"
 				items={exampleItems.map(({ header, count }) => (
-					<Example header={header} count={count} />
+					<Example key={count + header} header={header} count={count} />
 				))}
 			/>
 		</main>

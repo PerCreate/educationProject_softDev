@@ -1,13 +1,35 @@
 import "./Input.scss";
 
-const Input = ({ type = "text", name = null, value, textarea = false }) => {
+const Input = ({
+	type = "text",
+	name = null,
+	value,
+	onChange,
+	placeholder = null,
+	textarea = false,
+}) => {
 	// working доделать названия инпутов
 	return (
 		<label htmlFor={type + value} type={type}>
+			<div className="name">{name}</div>
 			{textarea ? (
-				<textarea id={type + value} type={type} className="Input" value={value}></textarea>
+				<textarea
+					placeholder={placeholder}
+					id={type + value}
+					type={type}
+					className="Input"
+					value={value}
+					onChange={(e) => onChange(e.target.value)}
+				></textarea>
 			) : (
-				<input id={type + value} type={type} className="Input" value={value}></input>
+				<input
+					placeholder={placeholder}
+					id={type + value}
+					type={type}
+					className="Input"
+					value={value}
+					onChange={(e) => onChange(e.target.value)}
+				></input>
 			)}
 		</label>
 	);

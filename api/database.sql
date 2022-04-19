@@ -55,7 +55,9 @@ create Table team(
 
 create Table application(
 	id SERIAL PRIMARY KEY,
-	client_id INTEGER,
+	name VARCHAR(255),
+	phone VARCHAR(255),
+	email VARCHAR(255),
+	comment VARCHAR(255),
 	service VARCHAR(255)
-	FOREIGN KEY (client_id) REFERENCES client (id)
 );
