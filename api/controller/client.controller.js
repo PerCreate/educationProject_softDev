@@ -9,6 +9,7 @@ class ClientController {
 			phone,
 			email,
 			password,
+			passwordConfirm,
 			status = "simple"
 		} = req.body;
 
@@ -19,6 +20,31 @@ class ClientController {
 		if (currentClient.rows.length > 0) {
 			return res.status(400).send({ error: 'This email already used.' });
 		}
+
+		if (name.length < 6) {
+			return res.status(400).send({ error: 'Min length of the name is 8.' });
+		}
+
+		if (!/^[a-zA-Z ]+$/.test(name)) {
+			return res.status(400).send({ error: 'Only letters in the name.' });
+		}
+
+		if (phone.length < 9 || phone.length > 24 || !phone.match(/^[0-9\+\-]*$/)) {
+			return res.status(400).send({ error: 'Invalid phone number.' });
+		}
+
+		if (password.length < 8) {
+			return res.status(400).send({ error: 'Min length of the password is 8.' });
+		}
+
+		if (!/^[a-zA-Z0-9]+$/.test(password)) {
+			return res.status(400).send({ error: 'Only numbers and latin letters is password.' });
+		}
+
+		if (password !== passwordConfirm) {
+			return res.status(400).send({ error: 'Passwords must match.' });
+		}
+
 
 		const salt = await bcrypt.genSalt(saltRounds);
 		const hashPW = await bcrypt.hash(`${password}`, salt);
@@ -36,10 +62,15 @@ class ClientController {
 			email,
 			password,
 		} = req.body;
-
+		console.log(email, password);
 		let currentClient = await db.query(
 			`SELECT email, password FROM client WHERE email = '${email}'`
 		);
+
+		if (!currentClient || currentClient.rows.length === 0) {
+			return res.status(400).send({ error: 'This email not found.' });
+		}
+
 		currentClient = currentClient.rows[0];
 
 		const isAuthSuccess = await bcrypt.compare(`${password}`, currentClient.password);

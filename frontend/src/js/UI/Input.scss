@@ -19,6 +19,11 @@ label {
 		border: 1px solid rgba(33, 33, 33, 0.2);
 		border-radius: 4px;
 		padding-left: 35px;
+		outline: none;
+
+		&:focus {
+			border-color: #2196f3;
+		}
 	}
 
 	textarea {
@@ -53,6 +58,16 @@ label {
 	&[type="email"] {
 		&::before {
 			background: url("../../img/input_email.svg");
+		}
+	}
+
+	&[type="password"] {
+		.Input {
+			padding-left: 10px !important;
+		}
+
+		&::before {
+			background: none;
 		}
 	}
 }

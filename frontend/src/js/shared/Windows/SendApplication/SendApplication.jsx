@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "../../UI/Button";
-import Input from "../../UI/Input";
+import Button from "../../../UI/Button";
+import Input from "../../../UI/Input";
 import "./SendApplication.scss";
 
 const SendApplication = ({ onSubmit }) => {
@@ -10,7 +10,7 @@ const SendApplication = ({ onSubmit }) => {
 	const [comment, setComment] = useState("");
 
 	return (
-		<div className="SendApplication">
+		<div className="SendApplication" style={{ width: "450px" }}>
 			<form>
 				<Input required type="name" name="Имя" value={name} onChange={setName} />
 				<Input required type="phone" name="Телефон" value={phone} onChange={setPhone} />

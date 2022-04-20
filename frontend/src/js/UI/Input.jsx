@@ -17,7 +17,7 @@ const Input = ({
 				<textarea
 					required={required}
 					placeholder={placeholder}
-					id={type + value}
+					id={type + value + placeholder}
 					type={type}
 					className="Input"
 					value={value}
@@ -27,7 +27,7 @@ const Input = ({
 				<input
 					required={required}
 					placeholder={placeholder}
-					id={type + value}
+					id={type + value + placeholder}
 					type={type}
 					className="Input"
 					value={value}

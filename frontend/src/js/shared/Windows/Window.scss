@@ -57,7 +57,7 @@
 		align-items: center;
 		justify-content: space-between;
 
-		padding: 40px;
+		padding: 15px 40px;
 
 		background: #ffffff;
 		box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.14),
@@ -67,7 +67,7 @@
 
 		.Window-close {
 			position: absolute;
-			top: 8px;
+			top: 12px;
 			right: 8px;
 			width: 30px;
 			height: 30px;
@@ -79,6 +79,10 @@
 			&:hover {
 				box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.12), 3px 3px 3px rgba(0, 0, 0, 0.14),
 					2px 2px 1px rgba(0, 0, 0, 0.2);
+
+				.close-tag {
+					border-color: #2196f3;
+				}
 			}
 
 			.close-tag {
@@ -99,5 +103,13 @@
 				transform: rotate(-45deg);
 			}
 		}
+	}
+
+	form {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: column;
+		align-items: center;
+		gap: 28px;
 	}
 }

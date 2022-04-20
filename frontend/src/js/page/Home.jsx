@@ -4,7 +4,7 @@ import axios from "axios";
 import List from "../components/List";
 import Example from "../components/ListItem/Example";
 import Skill from "../components/ListItem/Skill";
-import SendApplication from "../shared/Windows/SendApplication";
+import SendApplication from "../shared/Windows/SendApplication/SendApplication";
 import Window from "../shared/Windows/Window";
 import Button from "../UI/Button";
 import "./Home.scss";
@@ -49,14 +49,14 @@ const Home = ({ children }) => {
 		setWindowState(true);
 	};
 
-	const sendUserData = async (userData) => {
+	const sendNewApplication = async (userData) => {
 		try {
 			const data = await axios.post(URL + "/api/createApplication", userData);
 			console.log(data);
 			setWindowState(false);
 		} catch (e) {
 			setErrorMessage(e.response.data.error);
-			console.log('Error: ', e.response.data.error);
+			console.log("Error: ", e.response.data.error);
 		}
 	};
 
@@ -69,7 +69,7 @@ const Home = ({ children }) => {
 					errorMessage={errorMessage}
 					onCloseError={() => setErrorMessage("")}
 				>
-					<SendApplication onSubmit={sendUserData} />
+					<SendApplication onSubmit={sendNewApplication} />
 				</Window>
 			)}
 

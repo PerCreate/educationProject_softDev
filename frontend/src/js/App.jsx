@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 
@@ -9,7 +9,12 @@ import Home from "./page/Home";
 import Footer from "./shared/Footer";
 import { rootReducer } from "./redux/rootReducer";
 
-const store = configureStore(rootReducer, composeWithDevTools());
+const reducer = combineReducers({
+	reducer: rootReducer,
+	composeWithDevTools,
+});
+
+const store = configureStore({ reducer });
 
 function App() {
 	return (
