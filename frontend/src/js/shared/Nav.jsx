@@ -25,7 +25,7 @@ const Nav = () => {
 			console.log("newClientData: ", data);
 			setSignUpWindowState(false);
 		} catch (e) {
-			setErrorSignUpMessage(e.response.data.error);
+			setErrorSignUpMessage(e.response.data.error || "Something went wrong.");
 			console.log("Error: ", e.response.data.error);
 		}
 	};
@@ -36,7 +36,7 @@ const Nav = () => {
 			console.log("clientLogin: ", data);
 			setLogInWindowState(false);
 		} catch (e) {
-			setErrorLogInMessage(e.response.data.error);
+			setErrorLogInMessage(e.response.data.error || "Something went wrong.");
 			console.log("Error: ", e.response.data.error);
 		}
 	};

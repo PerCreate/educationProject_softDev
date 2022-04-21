@@ -7,10 +7,11 @@ import Nav from "./shared/Nav";
 import "./Root.scss";
 import Home from "./page/Home";
 import Footer from "./shared/Footer";
-import { rootReducer } from "./redux/rootReducer";
+import { rootReducer, authReducer } from "./redux/rootReducer";
 
 const reducer = combineReducers({
-	reducer: rootReducer,
+	authReducer,
+	rootReducer,
 	composeWithDevTools,
 });
 

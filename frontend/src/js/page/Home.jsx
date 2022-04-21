@@ -55,7 +55,7 @@ const Home = ({ children }) => {
 			console.log(data);
 			setWindowState(false);
 		} catch (e) {
-			setErrorMessage(e.response.data.error);
+			setErrorMessage(e.response.data.error || "Something went wrong.");
 			console.log("Error: ", e.response.data.error);
 		}
 	};

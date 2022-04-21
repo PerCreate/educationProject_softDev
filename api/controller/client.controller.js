@@ -1,6 +1,8 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const jwt = require('jsonwebtoken');
+
 class ClientController {
 	async createClient(req, res) {
 		const {
@@ -54,7 +56,8 @@ class ClientController {
 			[name, surname, phone, email, hashPW, status]
 		);
 
-		res.send({ newClient: newClient.rows[0] });
+		const token = jwt.sign({ email }, 'secret', { expiresIn: '180d' });
+		res.send({ newClient: newClient.rows[0], token });
 	}
 
 	async loginClient(req, res) {
@@ -78,7 +81,8 @@ class ClientController {
 		if (!isAuthSuccess) {
 			return res.status(400).send({ error: 'Invalid password.' });
 		} else {
-			return res.status(200).send({ success: true });
+			const token = jwt.sign({ email }, 'secret', { expiresIn: '180d' });
+			return res.status(200).send({ success: true, token });
 		}
 	}
 }
