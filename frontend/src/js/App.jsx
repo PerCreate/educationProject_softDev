@@ -1,25 +1,48 @@
-import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
-import { composeWithDevTools } from "redux-devtools-extension";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { connect } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import Nav from "./shared/Nav";
 import "./Root.scss";
 import Home from "./page/Home";
 import Footer from "./shared/Footer";
-import { rootReducer, authReducer } from "./redux/rootReducer";
+import { getURL } from "./Utils";
+import { onCheckSession } from "./redux/actions";
 
-const reducer = combineReducers({
-	authReducer,
-	rootReducer,
-	composeWithDevTools,
-});
+axios.defaults.withCredentials = true;
 
-const store = configureStore({ reducer });
+const mapState = (state) => {
+	return state;
+};
 
-function App() {
+const mapDispatch = {
+	dispatchClientData: onCheckSession,
+};
+
+function App({ state, dispatchClientData }) {
+	const [loading, setLoading] = useState(true);
+	const URL = getURL();
+
+	useEffect(() => {
+		const getData = async () => {
+			try {
+				const data = await axios.get(URL + "/api/checkSession");
+				const client = data.data.client;
+
+				dispatchClientData({ email: client.email, isAdmin: client.isadmin });
+				setLoading(false);
+			} catch (error) {
+				console.log("Error check session: ", error);
+			}
+		};
+		getData();
+	}, []);
+
+	if (loading) return <div className=""></div>;
+
 	return (
-		<Provider store={store}>
+		!loading && (
 			<Router>
 				<div className="App container">
 					<Nav />
@@ -29,8 +52,8 @@ function App() {
 					<Footer />
 				</div>
 			</Router>
-		</Provider>
+		)
 	);
 }
 
-export default App;
+export default connect(mapState, mapDispatch)(App);

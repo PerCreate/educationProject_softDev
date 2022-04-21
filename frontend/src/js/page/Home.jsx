@@ -52,7 +52,6 @@ const Home = ({ children }) => {
 	const sendNewApplication = async (userData) => {
 		try {
 			const data = await axios.post(URL + "/api/createApplication", userData);
-			console.log(data);
 			setWindowState(false);
 		} catch (e) {
 			setErrorMessage(e.response.data.error || "Something went wrong.");

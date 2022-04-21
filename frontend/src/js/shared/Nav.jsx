@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
-import { getURL } from "../Utils";
+import { createCookie, getURL } from "../Utils";
 import "./Nav.scss";
 import LogIn from "./Windows/LogIn/LogIn";
 import SignUp from "./Windows/SignUp/SignUp";
@@ -22,7 +22,6 @@ const Nav = () => {
 	const onSignUp = async (userData) => {
 		try {
 			const data = await axios.post(URL + "/api/createClient", userData);
-			console.log("newClientData: ", data);
 			setSignUpWindowState(false);
 		} catch (e) {
 			setErrorSignUpMessage(e.response.data.error || "Something went wrong.");
@@ -33,7 +32,6 @@ const Nav = () => {
 	const onLogIn = async (userData) => {
 		try {
 			const data = await axios.post(URL + "/api/loginClient", userData);
-			console.log("clientLogin: ", data);
 			setLogInWindowState(false);
 		} catch (e) {
 			setErrorLogInMessage(e.response.data.error || "Something went wrong.");

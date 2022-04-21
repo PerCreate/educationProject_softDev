@@ -1,5 +1,7 @@
+import { SET_CLIENT_INFO } from "./types";
 
 const initialState = {
+
 };
 
 
@@ -11,16 +13,23 @@ export const rootReducer = (state = initialState, action) => {
 	}
 };
 
-const getToken = () => localStorage.getItem('token');
 
 const initialStateAuth = {
-	token: getToken() || null,
+	email: null,
 	isAdmin: false
 };
 
 export const authReducer = (state = initialStateAuth, action) => {
 
 	switch (action.type) {
+		case SET_CLIENT_INFO:
+			const data = action.data;
+
+			return {
+				...state,
+				email: data.email,
+				isAdmin: data.isAdmin
+			};
 		default:
 			return state;
 	}

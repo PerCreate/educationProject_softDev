@@ -2,7 +2,14 @@ const db = require('../db');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
+const { Cookie } = require('express-session');
 
+const expiredDays = 180;
+const cookieConfig = () => ({
+	sameStrict: 'strict',
+	maxAge: expiredDays * 24 * 60 * 60 * 1000,
+	httpOnly: true
+});
 class ClientController {
 	async createClient(req, res) {
 		const {
@@ -57,7 +64,10 @@ class ClientController {
 		);
 
 		const token = jwt.sign({ email }, 'secret', { expiresIn: '180d' });
-		res.send({ newClient: newClient.rows[0], token });
+
+		res.status(202)
+			.cookie('token', token, cookieConfig())
+			.send({ newClient: newClient.rows[0] });
 	}
 
 	async loginClient(req, res) {
@@ -65,7 +75,7 @@ class ClientController {
 			email,
 			password,
 		} = req.body;
-		console.log(email, password);
+
 		let currentClient = await db.query(
 			`SELECT email, password FROM client WHERE email = '${email}'`
 		);
@@ -82,7 +92,28 @@ class ClientController {
 			return res.status(400).send({ error: 'Invalid password.' });
 		} else {
 			const token = jwt.sign({ email }, 'secret', { expiresIn: '180d' });
-			return res.status(200).send({ success: true, token });
+			return res
+				.status(200)
+				.cookie('token', token, cookieConfig(expiredDays))
+				.send({ success: true });
+		}
+	}
+
+	async checkSession(req, res, next) {
+		const { token } = req.cookies;
+
+		if (token) {
+			const { email } = jwt.verify(token, 'secret');
+
+			let currentClient = await db.query(
+				`SELECT email, isadmin FROM client WHERE email = '${email}'`
+			);
+
+			if (!currentClient || currentClient.rows.length === 0) {
+				return res.status(200).send({ client: null });
+			} else {
+				return res.status(200).send({ client: currentClient.rows[0] });
+			}
 		}
 	}
 }
