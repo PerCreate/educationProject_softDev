@@ -2,7 +2,7 @@
 	position: fixed;
 	top: 0;
 	left: 40%;
-	width: 100%;
+	width: calc(100vw - 40%);
 	height: 100vh;
 
 	&-overlay {

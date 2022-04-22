@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { Component, useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { getURL } from "../../../Utils";
+import { copyText, getURL } from "../../../Utils";
 
 import "./AdminPanel.scss";
 
@@ -122,18 +122,49 @@ const AdminPanel = () => {
 
 			{!loading && (
 				<div className="AdminPanel-content">
-					{activeTab === "applications" &&
-						panelData.map((item, index) => {
-							return (
-								<div key={item + index} className="item">
-									<div className="name">{item.name}</div>
-									<div className="phone">{item.phone}</div>
-									<div className="email">{item.email}</div>
-									<div className="comment">{item.comment}</div>
-									<div className="service">{item.service}</div>
-								</div>
-							);
-						})}
+					{activeTab === "applications" && (
+						<>
+							<div className="person">
+								<div className="item name">№</div>
+								<div className="item name">Имя</div>
+								<div className="item phone">Номер</div>
+								<div className="item email">Почта</div>
+								<div className="item comment">Комментарий</div>
+								<div className="item service">Услуга</div>
+							</div>
+							{panelData.map((item, index) => {
+								return (
+									<div key={item + index} className="person">
+										<div className="item number">{index + 1}</div>
+										<div
+											className="item name"
+											onClick={() => copyText(item.name)}
+										>
+											{item.name}
+										</div>
+										<div
+											className="item phone"
+											onClick={() => copyText(item.phone)}
+										>
+											{item.phone}
+										</div>
+										<div
+											className="item email"
+											onClick={() => copyText(item.email)}
+										>
+											{item.email}
+										</div>
+										<div className="item comment">
+											{item.comment || "Комметариев нет"}
+										</div>
+										<div className="item service">
+											{item.service || "Услуга не указана"}
+										</div>
+									</div>
+								);
+							})}
+						</>
+					)}
 					{}
 				</div>
 			)}
