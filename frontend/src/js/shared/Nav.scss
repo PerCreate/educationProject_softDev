@@ -4,6 +4,7 @@
 	align-items: center;
 	padding-top: 25px;
 	padding-bottom: 25px;
+	z-index: 1;
 
 	&-logo {
 		width: 173px;
@@ -26,6 +27,108 @@
 				color: #2196f3;
 				cursor: pointer;
 				border-bottom: 2px solid #2196f3;
+			}
+
+			&.burger-menu {
+				position: relative;
+
+				&:hover {
+					color: #000;
+					border-bottom: none;
+				}
+
+				.menu-button-container {
+					height: 100%;
+					width: 30px;
+					cursor: pointer;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+				}
+
+				#menu-toggle {
+					display: none;
+				}
+
+				.menu-overlay {
+					display: none;
+				}
+
+				.menu {
+					display: none;
+					flex-direction: column;
+					align-items: center;
+
+					width: 400px;
+					margin: 0;
+					padding: 0;
+					background-color: rgb(94, 109, 111);
+					box-shadow: 0 5px 15px rgb(53 69 88 / 50%);
+
+					li {
+						width: 100%;
+						padding: 10px;
+						background-color: #fff;
+						font-size: 18px;
+						text-align: center;
+
+						&:hover {
+							background-color: #21b1f3;
+						}
+					}
+				}
+
+				.menu-button,
+				.menu-button::before,
+				.menu-button::after {
+					display: block;
+					background-color: #000;
+					position: absolute;
+					height: 4px;
+					width: 30px;
+					transition: transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
+					border-radius: 2px;
+				}
+
+				.menu-button::before {
+					content: "";
+					margin-top: -8px;
+				}
+
+				.menu-button::after {
+					content: "";
+					margin-top: 8px;
+				}
+
+				#menu-toggle:checked + .menu-button-container {
+					.menu-button::before {
+						margin-top: 0px;
+						transform: rotate(405deg);
+					}
+					.menu-button {
+						background: rgba(255, 255, 255, 0);
+					}
+					.menu-button::after {
+						margin-top: 0px;
+						transform: rotate(-405deg);
+					}
+				}
+
+				#menu-toggle:checked ~ .menu {
+					display: flex;
+					position: absolute;
+					right: calc(100%);
+					user-select: none;
+				}
+
+				#menu-toggle:checked ~ .menu-overlay {
+					display: block;
+					position: fixed;
+					top: 0;
+					left: 0;
+					width: 100vw;
+					height: 100vh;
+				}
 			}
 		}
 	}

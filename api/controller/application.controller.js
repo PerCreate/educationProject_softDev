@@ -36,6 +36,18 @@ class Application {
 		console.log(req.body);
 		res.send({});
 	}
+
+	async getApplications(req, res) {
+
+		const allApplications = await db.query(`SELECT * FROM application`);
+
+		if (!allApplications) {
+			res.status(400).send({ error: "Something went wrong." });
+			throw new Error("Something went wrong.");
+		}
+
+		res.send({ applications: allApplications.rows });
+	}
 }
 
 module.exports = new Application();

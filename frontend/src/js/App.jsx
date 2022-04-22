@@ -30,7 +30,7 @@ function App({ state, dispatchClientData }) {
 				const data = await axios.get(URL + "/api/checkSession");
 				const client = data.data.client;
 
-				dispatchClientData({ email: client.email, isAdmin: client.isadmin });
+				client && dispatchClientData({ email: client.email, isAdmin: client.isadmin });
 				setLoading(false);
 			} catch (error) {
 				console.log("Error check session: ", error);

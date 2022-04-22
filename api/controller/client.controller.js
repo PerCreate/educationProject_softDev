@@ -114,7 +114,21 @@ class ClientController {
 			} else {
 				return res.status(200).send({ client: currentClient.rows[0] });
 			}
+		} else {
+			return res.status(200).send({ client: null });
 		}
+	}
+
+	async getClients(req, res, next) {
+		const allClients = await db.query(`SELECT * FROM client`);
+
+		if (!allClients) {
+			res.status(400).send({ error: "Something went wrong." });
+			throw new Error("Something went wrong.");
+		}
+
+		res.send({ clients: allClients.rows });
+
 	}
 }
 
