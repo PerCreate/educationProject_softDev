@@ -14,4 +14,10 @@
 	&:hover {
 		box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.15);
 	}
+
+	&._adminPanel {
+		padding: 4px 8px;
+		font-size: 14px;
+		margin-bottom: 10px;
+	}
 }

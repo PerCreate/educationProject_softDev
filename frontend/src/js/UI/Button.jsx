@@ -1,13 +1,13 @@
 import "./Button.scss";
 
-const Button = ({ text, cb }) => {
+const Button = ({ text, cb, classes }) => {
 	const onClick = (e) => {
 		e.preventDefault();
 		cb();
 	};
 
 	return (
-		<button className="Button" onClick={onClick}>
+		<button className={`Button ${classes}`} onClick={onClick}>
 			{text}
 		</button>
 	);
