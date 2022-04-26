@@ -14,11 +14,11 @@ function mapDispatchToProps(dispatch) {
 const Panel = ({ header, children, onClose }) => {
 	useEffect(() => {
 		const body = document.querySelector("body");
-		body?.classList.add("open-modal");
+		body?.classList.add("open-panel");
 
 		return () => {
 			const body = document.querySelector("body");
-			body.classList.remove("open-modal");
+			body.classList.remove("open-panel");
 			// onCloseError();
 		};
 	}, []);

@@ -39,9 +39,9 @@ create Table employee(
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255),
 	surname VARCHAR(255),
-	position VARCHAR(255),
-	team_id INTEGER
+	position VARCHAR(255)
 );
+	team_id INTEGER
 	FOREIGN KEY (team_id) REFERENCES team (id)
 
 create Table team(

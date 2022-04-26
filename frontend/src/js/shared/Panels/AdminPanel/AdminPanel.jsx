@@ -3,6 +3,10 @@ import React, { Component, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Button from "../../../UI/Button";
 import { copyText, getURL } from "../../../Utils";
+import CreateEmployee from "../../Windows/AdminPanel/CreateEmployee";
+import CreateOrder from "../../Windows/AdminPanel/CreateOrder";
+import CreateTeam from "../../Windows/AdminPanel/CreateTeam";
+import Window from "../../Windows/Window";
 
 import "./AdminPanel.scss";
 
@@ -25,6 +29,11 @@ const tabs = {
 const AdminPanel = () => {
 	const [activeTab, setActiveTab] = useState(tabs["applications"]);
 	const [panelData, setPanelData] = useState(null);
+
+	const [isCreateTeamWindowOpen, setIsCreateTeamWindowOpen] = useState(false);
+	const [isCreateEmployeeWindowOpen, setIsCreateEmployeeWindowOpen] = useState(false);
+	const [isCreateOrderWindowOpen, setIsCreateOrderWindowOpen] = useState(false);
+
 	const [loading, setLoading] = useState(true);
 
 	const URL = getURL();
@@ -101,7 +110,7 @@ const AdminPanel = () => {
 
 		try {
 			const data = await axios.get(URL + "/api/getEmployees");
-			setPanelData(data.data.orders);
+			setPanelData(data.data.employees);
 			setLoading(false);
 		} catch (e) {
 			console.log("Error: ", e.response.data.error);
@@ -111,6 +120,42 @@ const AdminPanel = () => {
 	useEffect(() => {
 		onApplications();
 	}, []);
+
+	const createEmployeeHandler = async (data) => {
+		setLoading(true);
+
+		try {
+			await axios.post(URL + "/api/createEmployee", data);
+			setIsCreateEmployeeWindowOpen(false);
+			setLoading(false);
+		} catch (e) {
+			console.log("Error: ", e.response.data.error);
+		}
+	};
+
+	const createTeamHandler = async (data) => {
+		setLoading(true);
+
+		try {
+			await axios.post(URL + "/api/createTeam", data);
+			setIsCreateTeamWindowOpen(false);
+			setLoading(false);
+		} catch (e) {
+			console.log("Error: ", e.response.data.error);
+		}
+	};
+
+	const createOrderHandler = async (data) => {
+		setLoading(true);
+
+		try {
+			await axios.post(URL + "/api/createOrder", data);
+			setIsCreateOrderWindowOpen(false);
+			setLoading(false);
+		} catch (e) {
+			console.log("Error: ", e.response.data.error);
+		}
+	};
 
 	return (
 		<div className="AdminPanel">
@@ -245,7 +290,11 @@ const AdminPanel = () => {
 						{activeTab === "teams" && (
 							<>
 								<div className="AdminPanel-content-header">
-									<Button text="Создать команду" classes="_adminPanel" />
+									<Button
+										text="Создать команду"
+										classes="_adminPanel"
+										cb={() => setIsCreateTeamWindowOpen(true)}
+									/>
 									<div className="person">
 										<div className="item name">№</div>
 										<div className="item name">Имя команды</div>
@@ -288,9 +337,110 @@ const AdminPanel = () => {
 										</div>
 									);
 								})}
+								{isCreateTeamWindowOpen && (
+									<Window
+										header="Создать команду"
+										onClose={() => setIsCreateTeamWindowOpen(false)}
+									>
+										<CreateTeam onSubmit={createTeamHandler} />
+									</Window>
+								)}
 							</>
 						)}
-						{}
+						{activeTab === "orders" && (
+							<>
+								<div className="AdminPanel-content-header">
+									<Button
+										text="Создать заказ"
+										classes="_adminPanel"
+										cb={() => setIsCreateOrderWindowOpen(true)}
+									/>
+									<div className="person">
+										<div className="item name">№</div>
+										<div className="item name">Имя клиента</div>
+										<div className="item name">Команда</div>
+										<div className="item orders">Срок начала</div>
+										<div className="item orders">Срок окончания</div>
+									</div>
+								</div>
+								{panelData.map((item, index) => {
+									return (
+										<div key={item + index} className="person">
+											<div className="item number">{index + 1}</div>
+											<div
+												className="item name"
+												title="Скопировать"
+												onClick={() => copyText(item.clientName)}
+											>
+												{item.clientName}
+											</div>
+											<div
+												className="item phone"
+												title="Скопировать"
+												onClick={() => copyText(item.teamName)}
+											>
+												{item.teamName}
+											</div>
+											<div
+												className="item email"
+												title="Скопировать"
+												onClick={() => copyText(item.startDate)}
+											>
+												{item.startDate}
+											</div>
+											<div
+												className="item email"
+												title="Скопировать"
+												onClick={() => copyText(item.finishDate)}
+											>
+												{item.finishDate}
+											</div>
+										</div>
+									);
+								})}
+								{isCreateOrderWindowOpen && (
+									<Window
+										header="Создать заказ"
+										onClose={() => setIsCreateOrderWindowOpen(false)}
+									>
+										<CreateOrder onSubmit={createOrderHandler} />
+									</Window>
+								)}
+							</>
+						)}
+						{activeTab === "employees" && (
+							<>
+								<div className="AdminPanel-content-header">
+									<Button
+										text="Создать сотрудника"
+										classes="_adminPanel"
+										cb={() => setIsCreateEmployeeWindowOpen(true)}
+									/>
+									<div className="person">
+										<div className="item name">№</div>
+										<div className="item name">Имя сотрудника</div>
+										<div className="item number">Позиция</div>
+									</div>
+								</div>
+								{panelData.map((item, index) => {
+									return (
+										<div key={item + index} className="person">
+											<div className="item name">{index + 1}</div>
+											<div className="item name">{item.name}</div>
+											<div className="item number">{item.position}</div>
+										</div>
+									);
+								})}
+								{isCreateEmployeeWindowOpen && (
+									<Window
+										header="Создать сотрудника"
+										onClose={() => setIsCreateEmployeeWindowOpen(false)}
+									>
+										<CreateEmployee onSubmit={createEmployeeHandler} />
+									</Window>
+								)}
+							</>
+						)}
 					</div>
 				</div>
 			)}

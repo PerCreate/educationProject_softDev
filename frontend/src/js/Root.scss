@@ -21,11 +21,18 @@
 }
 
 body {
-	&.open-modal {
+	&.open-modal,
+	&.open-panel {
 		overflow: hidden;
 		.container {
 			width: calc(100% - 15px);
 			margin-right: 25px;
+		}
+	}
+
+	._zIndex12 {
+		.react-date-picker__calendar {
+			z-index: 12;
 		}
 	}
 }

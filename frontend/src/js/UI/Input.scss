@@ -61,6 +61,22 @@ label {
 		}
 	}
 
+	&[type="number"] {
+		input {
+			padding-left: 10px;
+		}
+
+		input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+		}
+	}
+
+	&[type="text"] {
+		input {
+			padding-left: 10px;
+		}
+	}
+
 	&[type="password"] {
 		.Input {
 			padding-left: 10px !important;

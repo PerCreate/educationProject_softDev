@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Window.scss";
 
-const Window = ({ children, onClose, header, errorMessage = null, onCloseError }) => {
+const Window = ({ children, onClose, header, errorMessage = null, onCloseError = null }) => {
 	useEffect(() => {
 		const body = document.querySelector("body");
 		body?.classList.add("open-modal");
@@ -9,7 +9,7 @@ const Window = ({ children, onClose, header, errorMessage = null, onCloseError }
 		return () => {
 			const body = document.querySelector("body");
 			body.classList.remove("open-modal");
-			onCloseError();
+			onCloseError && onCloseError();
 		};
 	}, []);
 

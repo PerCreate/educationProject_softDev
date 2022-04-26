@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const clientRoutes = require('./routes/client.routes');
 const applicationRoutes = require('./routes/application.routes');
 const teamsRoutes = require('./routes/team.routes');
+const orderRoutes = require('./routes/currentOrders.routes');
+const employeesRoutes = require('./routes/employee.routes');
 
 const PORT = process.env.PORT || 3000;
 
@@ -20,7 +22,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.use('/api', [clientRoutes, applicationRoutes, teamsRoutes]);
+app.use('/api', [clientRoutes, applicationRoutes, teamsRoutes, orderRoutes, employeesRoutes]);
 
 app.listen(PORT, () => {
 	console.log(PORT);

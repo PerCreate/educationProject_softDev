@@ -2,10 +2,14 @@ const db = require('../db');
 
 class Team {
 	async createTeam(req, res) {
-		const { id } = req.body;
+		const {
+			name,
+			employees,
+		} = req.body;
 
-		console.log(req.body);
-		res.send({});
+		const newTeam = await db.query(`INSERT INTO team (name,employees) values ($1, $2) RETURNING *`, [name, employees]);
+
+		res.send({ newTeam: newTeam.rows[0] });
 	}
 
 	async deleteTeam(req, res) {
