@@ -191,10 +191,10 @@ const AdminPanel = () => {
 
 			{!loading && (
 				<div className="AdminPanel-content">
-					<div className="AdminPanel-content-body">
-						{activeTab === "applications" && (
-							<>
-								<div className="person">
+					{activeTab === "applications" && (
+						<>
+							<div className="AdminPanel-content-header">
+								<div className="person header">
 									<div className="item name">№</div>
 									<div className="item name">Имя</div>
 									<div className="item phone">Номер</div>
@@ -202,6 +202,8 @@ const AdminPanel = () => {
 									<div className="item comment">Комментарий</div>
 									<div className="item service">Услуга</div>
 								</div>
+							</div>
+							<div className="AdminPanel-content-body">
 								{panelData.map((item, index) => {
 									return (
 										<div key={item + index} className="person">
@@ -236,11 +238,13 @@ const AdminPanel = () => {
 										</div>
 									);
 								})}
-							</>
-						)}
-						{activeTab === "clients" && (
-							<>
-								<div className="person">
+							</div>
+						</>
+					)}
+					{activeTab === "clients" && (
+						<>
+							<div className="AdminPanel-content-header">
+								<div className="person header">
 									<div className="item name">№</div>
 									<div className="item name">Имя</div>
 									<div className="item phone">Номер</div>
@@ -248,6 +252,8 @@ const AdminPanel = () => {
 									<div className="item status">Статус</div>
 									<div className="item isadmin">Является админом</div>
 								</div>
+							</div>
+							<div className="AdminPanel-content-body">
 								{panelData.map((item, index) => {
 									return (
 										<div key={item + index} className="person">
@@ -282,55 +288,45 @@ const AdminPanel = () => {
 										</div>
 									);
 								})}
-							</>
-						)}
-						{activeTab === "teams" && (
-							<>
-								<div className="AdminPanel-content-header">
-									<Button
-										text="Создать команду"
-										classes="_adminPanel"
-										cb={() => setIsCreateTeamWindowOpen(true)}
-									/>
-									<div className="person">
-										<div className="item name">№</div>
-										<div className="item name">Имя команды</div>
-										<div className="item name">Сотрудники</div>
-										<div className="item orders">Текущий заказ</div>
-										<div className="item orders">Выполненные заказы</div>
-									</div>
+							</div>
+						</>
+					)}
+					{activeTab === "teams" && (
+						<>
+							<div className="AdminPanel-content-header">
+								<Button
+									text="Создать команду"
+									classes="_adminPanel"
+									cb={() => setIsCreateTeamWindowOpen(true)}
+								/>
+								<div className="person header">
+									<div className="item name">№</div>
+									<div className="item name _default">Имя команды</div>
+									<div className="item employees">Сотрудники</div>
+									<div className="item orders">Текущий заказ</div>
+									<div className="item orders">Выполненные заказы</div>
 								</div>
+							</div>
+							<div className="AdminPanel-content-body">
 								{panelData.map((item, index) => {
 									return (
 										<div key={item + index} className="person">
 											<div className="item number">{index + 1}</div>
+											<div className="item name _default">{item.name}</div>
 											<div
-												className="item name"
-												title="Скопировать"
-												onClick={() => copyText(item.name)}
+												className="item employees"
+												title="Перейти"
+												onClick={() => copyText(item.employees)}
 											>
-												{item.employees}
+												{item.employees.map((name) => (
+													<>
+														<span className="employee">{name}</span>
+														<br />
+													</>
+												))}
 											</div>
-											<div
-												className="item phone"
-												title="Скопировать"
-												onClick={() => copyText(item.phone)}
-											>
-												{item.phone}
-											</div>
-											<div
-												className="item email"
-												title="Скопировать"
-												onClick={() => copyText(item.email)}
-											>
-												{item.currentOrder}
-											</div>
-											<div className="item status">
-												{item.status || "Статуса нет"}
-											</div>
-											<div className="item isadmin">
-												{item.isadmin ? "Да" : "Нет"}
-											</div>
+											<div className="item orders">{item.currentOrder}</div>
+											<div className="item orders">{item.finishedOrder}</div>
 										</div>
 									);
 								})}
@@ -342,24 +338,26 @@ const AdminPanel = () => {
 										<CreateTeam onSubmit={createTeamHandler} />
 									</Window>
 								)}
-							</>
-						)}
-						{activeTab === "orders" && (
-							<>
-								<div className="AdminPanel-content-header">
-									<Button
-										text="Создать заказ"
-										classes="_adminPanel"
-										cb={() => setIsCreateOrderWindowOpen(true)}
-									/>
-									<div className="person">
-										<div className="item name">№</div>
-										<div className="item name">Имя клиента</div>
-										<div className="item name">Команда</div>
-										<div className="item orders">Срок начала</div>
-										<div className="item orders">Срок окончания</div>
-									</div>
+							</div>
+						</>
+					)}
+					{activeTab === "orders" && (
+						<>
+							<div className="AdminPanel-content-header">
+								<Button
+									text="Создать заказ"
+									classes="_adminPanel"
+									cb={() => setIsCreateOrderWindowOpen(true)}
+								/>
+								<div className="person header">
+									<div className="item name">№</div>
+									<div className="item name">Имя клиента</div>
+									<div className="item name">Команда</div>
+									<div className="item orders">Срок начала</div>
+									<div className="item orders">Срок окончания</div>
 								</div>
+							</div>
+							<div className="AdminPanel-content-body">
 								{panelData.map((item, index) => {
 									return (
 										<div key={item + index} className="person">
@@ -403,22 +401,24 @@ const AdminPanel = () => {
 										<CreateOrder onSubmit={createOrderHandler} />
 									</Window>
 								)}
-							</>
-						)}
-						{activeTab === "employees" && (
-							<>
-								<div className="AdminPanel-content-header">
-									<Button
-										text="Создать сотрудника"
-										classes="_adminPanel"
-										cb={() => setIsCreateEmployeeWindowOpen(true)}
-									/>
-									<div className="person">
-										<div className="item name">№</div>
-										<div className="item name">Имя сотрудника</div>
-										<div className="item number">Позиция</div>
-									</div>
+							</div>
+						</>
+					)}
+					{activeTab === "employees" && (
+						<>
+							<div className="AdminPanel-content-header">
+								<Button
+									text="Создать сотрудника"
+									classes="_adminPanel"
+									cb={() => setIsCreateEmployeeWindowOpen(true)}
+								/>
+								<div className="person header">
+									<div className="item name">№</div>
+									<div className="item name">Имя сотрудника</div>
+									<div className="item number">Позиция</div>
 								</div>
+							</div>
+							<div className="AdminPanel-content-body">
 								{panelData.map((item, index) => {
 									return (
 										<div key={item + index} className="person">
@@ -436,9 +436,9 @@ const AdminPanel = () => {
 										<CreateEmployee onSubmit={createEmployeeHandler} />
 									</Window>
 								)}
-							</>
-						)}
-					</div>
+							</div>
+						</>
+					)}
 				</div>
 			)}
 		</div>

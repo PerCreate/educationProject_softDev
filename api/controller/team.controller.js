@@ -37,7 +37,20 @@ class Team {
 			throw new Error("Something went wrong.");
 		}
 
-		res.send({ teams: allTeams.rows });
+		const refAllTeams = await Promise.all(allTeams.rows.map(async ({ id, name, completed_orders, current_orders, employees }) => {
+			const searchedEmployees = await db.query(`SELECT name, position FROM employee WHERE id IN(${employees.join(',')})`);
+			const employeesNames = searchedEmployees.rows.map(({ name, position }) => `${name} | ${position}`);
+
+			return {
+				id,
+				name,
+				employees: employeesNames,
+				currentOrders: current_orders,
+				finishedOrders: completed_orders
+			};
+		}));
+
+		res.send({ teams: refAllTeams });
 	}
 }
 
