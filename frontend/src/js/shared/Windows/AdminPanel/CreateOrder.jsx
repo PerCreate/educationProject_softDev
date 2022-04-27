@@ -94,7 +94,7 @@ const CreateOrder = ({ onSubmit }) => {
 					<div style={{ width: "250px" }}> Дата начала:</div>
 					<DatePicker
 						className="_zIndex12"
-						format="y-MM-dd"
+						format="dd-MM-y"
 						value={startDate}
 						onChange={setStartDate}
 					/>

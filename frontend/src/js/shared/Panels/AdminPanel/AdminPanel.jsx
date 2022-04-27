@@ -76,11 +76,8 @@ const AdminPanel = () => {
 
 		try {
 			const data = await axios.get(URL + "/api/getTeams");
-			const ewq = [];
-			for (let index = 0; index < 100; index++) {
-				ewq.push(data.data.teams);
-			}
-			setPanelData(ewq);
+
+			setPanelData(data.data.teams);
 			setLoading(false);
 		} catch (e) {
 			console.log("Error: ", e.response.data.error);
@@ -312,7 +309,7 @@ const AdminPanel = () => {
 												title="Скопировать"
 												onClick={() => copyText(item.name)}
 											>
-												{item.name}
+												{item.employees}
 											</div>
 											<div
 												className="item phone"
@@ -326,7 +323,7 @@ const AdminPanel = () => {
 												title="Скопировать"
 												onClick={() => copyText(item.email)}
 											>
-												{item.email}
+												{item.currentOrder}
 											</div>
 											<div className="item status">
 												{item.status || "Статуса нет"}
