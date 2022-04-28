@@ -1,4 +1,4 @@
-export const getURL = () => 'http://localhost:3000';
+export const getURL = () => '';
 
 export function copyText(text) {
 	const input = document.createElement('input');
