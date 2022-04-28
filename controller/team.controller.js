@@ -10,7 +10,7 @@ class Team {
 		const newTeam = await db.query(`INSERT INTO team (name) values ($1) RETURNING *`, [name]);
 		const newTeamId = newTeam.rows[0].id;
 
-		await db.query(`UPDATE TABLE employee SET team_id = ${newTeamId} WHERE id IN(${employees.join(',')})`);
+		await db.query(`UPDATE employee SET team_id = ${newTeamId} WHERE id IN(${employees.join(',')})`);
 
 		res.send({ newTeam: newTeam.rows[0] });
 	}
