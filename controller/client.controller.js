@@ -14,7 +14,6 @@ class ClientController {
 	async createClient(req, res) {
 		const {
 			name,
-			surname,
 			phone,
 			email,
 			password,
@@ -59,8 +58,8 @@ class ClientController {
 		const hashPW = await bcrypt.hash(`${password}`, salt);
 
 		const newClient = await db.query(
-			`INSERT INTO client (name,surname, phone, email,password, status) values ($1, $2, $3, $4, $5, $6) RETURNING *`,
-			[name, surname, phone, email, hashPW, status]
+			`INSERT INTO client (name, phone, email,password, status) values ($1, $2, $3, $4, $5) RETURNING *`,
+			[name, phone, email, hashPW, status]
 		);
 
 		const token = jwt.sign({ email }, 'secret', { expiresIn: '180d' });
