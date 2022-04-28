@@ -8,8 +8,7 @@
 		"npm": "8.1.2"
 	},
 	"scripts": {
-		"start": "nodemon index.js",
-		"heroku-postbuild": "cd frontend && npm install && npm run start"
+		"start": "nodemon index.js && cd frontend && npm install && npm run start"
 	},
 	"repository": {
 		"type": "git",
