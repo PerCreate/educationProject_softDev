@@ -17,10 +17,15 @@ app.use(cookieParser());
 app.use(function (req, res, next) {
 	res.header('Access-Control-Allow-Origin', 'http://localhost:3001');
 	res.header('Access-Control-Allow-Credentials', 'true');
-	res.header('Content-Security-Policy', `default-src 'self'`);
+	res.header('Content-Security-Policy', `default-src 'self'; style-src 'unsafe-inline' 'self'; img-src 'self' data:;`);
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	next();
 });
+
+app.use(express.static("../frontend/build"));
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static("./frontend/build"));
+}
 
 app.use('/api', [clientRoutes, applicationRoutes, teamsRoutes, orderRoutes, employeesRoutes]);
 

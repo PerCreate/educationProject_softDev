@@ -17,7 +17,6 @@ const SignUp = ({ onSubmit }) => {
 	const [phone, setPhone] = useState("");
 	const [password, setPassword] = useState("");
 	const [passwordConfirm, setPasswordConfirm] = useState("");
-	const [surname, setSurname] = useState("");
 
 	return (
 		<div className="SignUp" style={{ width: "450px" }}>
@@ -29,14 +28,6 @@ const SignUp = ({ onSubmit }) => {
 					name="Имя"
 					value={name}
 					onChange={setName}
-				/>
-				<Input
-					placeholder="Введите фамилию"
-					required
-					type="name"
-					name="Фамилия"
-					value={surname}
-					onChange={setSurname}
 				/>
 				<Input
 					placeholder="Введите телефон"
@@ -71,7 +62,7 @@ const SignUp = ({ onSubmit }) => {
 				/>
 				<Button
 					text="Зарегистрироваться"
-					cb={() => onSubmit({ name, phone, email, surname, password, passwordConfirm })}
+					cb={() => onSubmit({ name, phone, email, password, passwordConfirm })}
 				/>
 			</form>
 		</div>
