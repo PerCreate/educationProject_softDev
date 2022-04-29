@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.use(express.static("./frontend/build"));
+app.use(express.static("../frontend/build"));
 if (process.env.NODE_ENC === "production") {
 	app.use(express.static("./frontend/build"));
 }
