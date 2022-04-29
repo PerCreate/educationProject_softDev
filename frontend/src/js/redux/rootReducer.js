@@ -1,4 +1,4 @@
-import { SET_CLIENT_INFO } from "./types";
+import { AUTHENTICATION, LOGOUT, SET_CLIENT_INFO } from "./types";
 
 const initialState = {
 
@@ -12,7 +12,6 @@ export const rootReducer = (state = initialState, action) => {
 			return state;
 	}
 };
-
 
 const initialStateAuth = {
 	email: null,
@@ -29,6 +28,22 @@ export const authReducer = (state = initialStateAuth, action) => {
 				...state,
 				email: data.email,
 				isAdmin: data.isAdmin
+			};
+
+		case LOGOUT:
+			return {
+				...state,
+				email: null,
+				isAdmin: null
+			};
+
+		case AUTHENTICATION:
+			const data1 = action.data;
+
+			return {
+				...state,
+				email: data1.email,
+				isAdmin: data1.isAdmin
 			};
 		default:
 			return state;

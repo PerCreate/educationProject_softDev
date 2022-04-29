@@ -21,9 +21,14 @@ class ClientController {
 			status = "simple"
 		} = req.body;
 
-		let currentClient = await db.query(
-			`SELECT email FROM client WHERE email = '${email}'`
-		);
+		try {
+			var currentClient = await db.query(
+				`SELECT email FROM client WHERE email = '${email}'`
+			);
+
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (currentClient.rows.length > 0) {
 			return res.status(400).send({ error: 'This email already used.' });
@@ -53,14 +58,18 @@ class ClientController {
 			return res.status(400).send({ error: 'Passwords must match.' });
 		}
 
-
 		const salt = await bcrypt.genSalt(saltRounds);
 		const hashPW = await bcrypt.hash(`${password}`, salt);
 
-		const newClient = await db.query(
-			`INSERT INTO client (name, phone, email,password, status) values ($1, $2, $3, $4, $5) RETURNING *`,
-			[name, phone, email, hashPW, status]
-		);
+		try {
+			var newClient = await db.query(
+				`INSERT INTO client (name, phone, email,password, status) values ($1, $2, $3, $4, $5) RETURNING *`,
+				[name, phone, email, hashPW, status]
+			);
+		} catch (e) {
+			console.log(e);
+		}
+
 
 		const token = jwt.sign({ email }, 'secret', { expiresIn: '180d' });
 
@@ -75,9 +84,13 @@ class ClientController {
 			password,
 		} = req.body;
 
-		let currentClient = await db.query(
-			`SELECT email, password FROM client WHERE email = '${email}'`
-		);
+		try {
+			var currentClient = await db.query(
+				`SELECT email, password, isadmin FROM client WHERE email = '${email}'`
+			);
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (!currentClient || currentClient.rows.length === 0) {
 			return res.status(400).send({ error: 'This email not found.' });
@@ -94,8 +107,14 @@ class ClientController {
 			return res
 				.status(200)
 				.cookie('token', token, cookieConfig(expiredDays))
-				.send({ success: true });
+				.send({ success: true, email, isAdmin: currentClient.isadmin });
 		}
+	}
+
+	async logoutClient(req, res) {
+		const { email } = req.body;
+
+		res.clearCookie("token").send({ success: true });
 	}
 
 	async checkSession(req, res, next) {
@@ -104,9 +123,14 @@ class ClientController {
 		if (token) {
 			const { email } = jwt.verify(token, 'secret');
 
-			let currentClient = await db.query(
-				`SELECT email, isadmin FROM client WHERE email = '${email}'`
-			);
+			try {
+				var currentClient = await db.query(
+					`SELECT email, isadmin FROM client WHERE email = '${email}'`
+				);
+
+			} catch (e) {
+				console.log(e);
+			}
 
 			if (!currentClient || currentClient.rows.length === 0) {
 				return res.status(200).send({ client: null });
@@ -119,7 +143,11 @@ class ClientController {
 	}
 
 	async getClients(req, res, next) {
-		const allClients = await db.query(`SELECT * FROM client`);
+		try {
+			var allClients = await db.query(`SELECT * FROM client`);
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (!allClients) {
 			res.status(400).send({ error: "Something went wrong." });

@@ -7,14 +7,21 @@ class Employee {
 			position,
 			teamId
 		} = req.body;
-
-		const newEmployee = await db.query(`INSERT INTO employee (name,position) values ($1, $2) RETURNING *`, [name, position]);
+		try {
+			var newEmployee = await db.query(`INSERT INTO employee (name,position) values ($1, $2) RETURNING *`, [name, position]);
+		} catch (e) {
+			console.log(e);
+		}
 
 		res.send({ newEmployee: newEmployee.rows[0] });
 	}
 
 	async getEmployees(req, res) {
-		const allEmployees = await db.query(`SELECT * FROM employee`);
+		try {
+			var allEmployees = await db.query(`SELECT * FROM employee`);
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (!allEmployees) {
 			res.status(400).send({ error: "Something went wrong." });

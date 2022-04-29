@@ -8,9 +8,13 @@ const authorization = async (req, res, next) => {
 	if (token) {
 		const { email } = jwt.verify(token, 'secret');
 
-		let currentClient = await db.query(
-			`SELECT email, isadmin FROM client WHERE email = '${email}'`
-		);
+		try {
+			var currentClient = await db.query(
+				`SELECT email, isadmin FROM client WHERE email = '${email}'`
+			);
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (!currentClient || currentClient.rows.length === 0) {
 			return res.status(400).send({ error: 'You can\'t do this. You haven\'t admin access.' });
