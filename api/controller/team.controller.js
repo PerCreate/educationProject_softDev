@@ -7,7 +7,10 @@ class Team {
 			employees,
 		} = req.body;
 
-		const newTeam = await db.query(`INSERT INTO team (name,employees) values ($1, $2) RETURNING *`, [name, employees]);
+		const newTeam = await db.query(`INSERT INTO team (name) values ($1) RETURNING *`, [name]);
+		const newTeamId = newTeam.rows[0].id;
+
+		await db.query(`UPDATE employee SET team_id = ${newTeamId} WHERE id IN(${employees.join(',')})`);
 
 		res.send({ newTeam: newTeam.rows[0] });
 	}
@@ -28,6 +31,8 @@ class Team {
 
 	async getTeams(req, res) {
 
+		const employees = req.body.employees;
+
 		const allTeams = await db.query(
 			`SELECT * FROM team`
 		);
@@ -37,8 +42,8 @@ class Team {
 			throw new Error("Something went wrong.");
 		}
 
-		const refAllTeams = await Promise.all(allTeams.rows.map(async ({ id, name, completed_orders, current_orders, employees }) => {
-			const searchedEmployees = await db.query(`SELECT name, position FROM employee WHERE id IN(${employees.join(',')})`);
+		const refAllTeams = await Promise.all(allTeams.rows.map(async ({ id, name, completed_orders, current_orders }) => {
+			const searchedEmployees = await db.query(`SELECT name, position FROM employee WHERE team_id = '${id}'`);
 			const employeesNames = searchedEmployees.rows.map(({ name, position }) => `${name} | ${position}`);
 
 			return {
