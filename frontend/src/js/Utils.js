@@ -1,4 +1,4 @@
-export const getURL = () => '';
+export const getURL = () => process.env.NODE_ENV === "production" ? "" : 'http://localhost:3000';
 
 export function copyText(text) {
 	const input = document.createElement('input');
