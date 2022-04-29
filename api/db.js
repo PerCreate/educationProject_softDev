@@ -15,6 +15,6 @@ const prodConfig = {
 
 const currentConfig = process.env.NODE_ENV === "production" ? prodConfig : devConfig;
 
-const pool = new Pool(currentConfig);
+const pool = new Pool(devConfig);
 
 module.exports = pool;
