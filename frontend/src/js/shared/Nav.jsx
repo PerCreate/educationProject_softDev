@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Button from "../UI/Button";
@@ -10,16 +10,17 @@ import SidePanel from "./Panels/SidePanel";
 import LogIn from "./Windows/LogIn/LogIn";
 import SignUp from "./Windows/SignUp/SignUp";
 import Window from "./Windows/Window";
+import { login } from "../redux/actions";
 
 const mapState = (state) => {
 	return state;
 };
 
 const mapDispatch = {
-	dispatchClientData: () => {},
+	dispatchClientData: login,
 };
 
-const Nav = ({ authReducer }) => {
+const Nav = ({ authReducer, dispatchClientData }) => {
 	const [isSignUpWindowOpen, setSignUpWindowState] = useState(false);
 	const [errorSignUpMessage, setErrorSignUpMessage] = useState("");
 
@@ -27,7 +28,14 @@ const Nav = ({ authReducer }) => {
 	const [errorLogInMessage, setErrorLogInMessage] = useState("");
 
 	const [isAdminPanelOpen, setAdminPanelState] = useState(false);
-	const [userData] = useState({ email: authReducer.email, isAdmin: authReducer.isAdmin });
+	const [userData, setUserData] = useState({
+		email: authReducer.email,
+		isAdmin: authReducer.isAdmin,
+	});
+
+	useEffect(() => {
+		setUserData({ email: authReducer.email, isAdmin: authReducer.isAdmin });
+	}, [authReducer]);
 
 	const getRecommendation = () => {};
 
@@ -45,7 +53,21 @@ const Nav = ({ authReducer }) => {
 
 	const onLogIn = async (userData) => {
 		try {
-			await axios.post(URL + "/api/loginClient", userData);
+			const data = await axios.post(URL + "/api/loginClient", userData);
+
+			data.data.success &&
+				dispatchClientData({ email: data.data.email, isAdmin: data.data.isAdmin });
+			setLogInWindowState(false);
+		} catch (e) {
+			setErrorLogInMessage(e.response.data.error || "Something went wrong.");
+			console.log("Error: ", e.response.data.error);
+		}
+	};
+
+	const onLogOut = async (userEmail) => {
+		try {
+			await axios.get(URL + "/api/logoutClient", userEmail);
+			dispatchClientData({ email: null, isAdmin: null });
 			setLogInWindowState(false);
 		} catch (e) {
 			setErrorLogInMessage(e.response.data.error || "Something went wrong.");
@@ -84,7 +106,7 @@ const Nav = ({ authReducer }) => {
 				<li className="item">Контакты</li>
 
 				{userData.email ? (
-					<li className="item" onClick={() => setSignUpWindowState(true)}>
+					<li className="item" onClick={() => onLogOut(userData.email)}>
 						Выйти
 					</li>
 				) : (

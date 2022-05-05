@@ -25,7 +25,12 @@ class Application {
 			return res.status(400).send({ error: 'Min length of the name is 8.' });
 		}
 
-		const newApplication = await db.query(`INSERT INTO application (name, phone, email, comment) values ($1, $2, $3, $4) RETURNING *`, [name, phone, email, comment]);
+		try {
+			var newApplication = await db.query(`INSERT INTO application (name, phone, email, comment) values ($1, $2, $3, $4) RETURNING *`, [name, phone, email, comment]);
+		} catch (e) {
+			console.log(e);
+		}
+
 
 		res.send({ created: true, newApplication: newApplication.rows[0] });
 	}
@@ -38,8 +43,11 @@ class Application {
 	}
 
 	async getApplications(req, res) {
-
-		const allApplications = await db.query(`SELECT * FROM application`);
+		try {
+			var allApplications = await db.query(`SELECT * FROM application`);
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (!allApplications) {
 			res.status(400).send({ error: "Something went wrong." });

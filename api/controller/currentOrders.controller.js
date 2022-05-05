@@ -11,10 +11,14 @@ class CurrentOrders {
 			teamId
 		} = req.body;
 
-		const newOrder = await db.query(
-			`INSERT INTO current_orders (linkdescription,client_id,date_start,date_finish,amount,team_id) values ($1, $2, $3, $4, $5, $6) RETURNING *`,
-			[linkDescription, clientId, startDate, finishDate, amount, teamId]
-		);
+		try {
+			var newOrder = await db.query(
+				`INSERT INTO current_orders (linkdescription,client_id,date_start,date_finish,amount,team_id) values ($1, $2, $3, $4, $5, $6) RETURNING *`,
+				[linkDescription, clientId, startDate, finishDate, amount, teamId]
+			);
+		} catch (e) {
+			console.log(e);
+		}
 
 		res.send({ created: true, newOrder: newOrder.rows[0] });
 	}
@@ -27,7 +31,11 @@ class CurrentOrders {
 	}
 
 	async getOrders(req, res) {
-		const allOrders = await db.query(`SELECT * FROM current_orders`);
+		try {
+			var allOrders = await db.query(`SELECT * FROM current_orders`);
+		} catch (e) {
+			console.log(e);
+		}
 
 		if (!allOrders) {
 			res.status(400).send({ error: "Something went wrong." });
