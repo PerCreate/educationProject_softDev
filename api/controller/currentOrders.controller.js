@@ -8,13 +8,14 @@ class CurrentOrders {
 			startDate,
 			finishDate,
 			amount,
-			teamId
+			teamId,
+			name
 		} = req.body;
 
 		try {
 			var newOrder = await db.query(
-				`INSERT INTO current_orders (linkdescription,client_id,date_start,date_finish,amount,team_id) values ($1, $2, $3, $4, $5, $6) RETURNING *`,
-				[linkDescription, clientId, startDate, finishDate, amount, teamId]
+				`INSERT INTO current_orders (linkdescription,client_id,date_start,date_finish,amount,team_id,name) values ($1, $2, $3, $4, $5, $6,$7) RETURNING *`,
+				[linkDescription, clientId, startDate, finishDate, amount, teamId, name]
 			);
 		} catch (e) {
 			console.log(e);
