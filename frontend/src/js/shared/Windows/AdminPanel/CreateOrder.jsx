@@ -53,11 +53,11 @@ const CreateOrder = ({ onSubmit }) => {
 	return (
 		<div className="CreateOrder" style={{ width: "450px" }}>
 			<form>
-				<Input required type="name" name="Имя команды" value={name} onChange={setName} />
+				<Input required name="Название проекта" value={name} onChange={setName} />
 				<Input
 					required
 					type="number"
-					name="Бюджет проекта"
+					name="Бюджет проекта (в рублях)"
 					value={amount}
 					onChange={setAmount}
 				/>

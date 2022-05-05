@@ -32,6 +32,7 @@ create Table employee(
 
 create Table current_orders(
 	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
 	date_start VARCHAR(255) NOT NULL,
 	date_finish VARCHAR(255) NOT NULL,
 	amount VARCHAR(255) NOT NULL,
@@ -43,6 +44,7 @@ create Table current_orders(
 
 create Table completed_orders(
 	id SERIAL PRIMARY KEY,
+	name VARCHAR(255) NOT NULL,
 	date_start VARCHAR(255) NOT NULL,
 	date_finish VARCHAR(255) NOT NULL,
 	client_id INTEGER NOT NULL,
