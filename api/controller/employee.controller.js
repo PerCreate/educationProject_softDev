@@ -31,6 +31,21 @@ class Employee {
 		res.send({ employees: allEmployees.rows });
 	}
 
+	async getFreeEmployees(req, res) {
+		try {
+			var allEmployees = await db.query(`SELECT * FROM employee WHERE team_id IS NULL`);
+		} catch (e) {
+			console.log(e);
+		}
+
+		if (!allEmployees) {
+			res.status(400).send({ error: "Something went wrong." });
+			throw new Error("Something went wrong.");
+		}
+
+		res.send({ employees: allEmployees.rows });
+	}
+
 	async deleteEmployee(req, res) {
 		const { id } = req.body;
 

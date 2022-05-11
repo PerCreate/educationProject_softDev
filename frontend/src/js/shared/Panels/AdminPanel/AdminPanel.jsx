@@ -1,11 +1,13 @@
 import axios from "axios";
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Button from "../../../UI/Button";
 import { copyText, getURL } from "../../../Utils";
 import CreateEmployee from "../../Windows/AdminPanel/CreateEmployee";
 import CreateOrder from "../../Windows/AdminPanel/CreateOrder";
 import CreateTeam from "../../Windows/AdminPanel/CreateTeam";
+import TeamChange from "../../Windows/AdminPanel/TeamChange";
+import Confirm from "../../Windows/Confirm/Confirm";
 import Window from "../../Windows/Window";
 
 import "./AdminPanel.scss";
@@ -31,8 +33,13 @@ const AdminPanel = () => {
 	const [panelData, setPanelData] = useState(null);
 
 	const [isCreateTeamWindowOpen, setIsCreateTeamWindowOpen] = useState(false);
+	const [isEditTeamWindowOpen, setIsEditTeamWindowOpen] = useState(false);
 	const [isCreateEmployeeWindowOpen, setIsCreateEmployeeWindowOpen] = useState(false);
 	const [isCreateOrderWindowOpen, setIsCreateOrderWindowOpen] = useState(false);
+	const [isConfirmWindowOpen, setIsConfirmWindowOpen] = useState(false);
+
+	const [confirmFunction, setConfirmAction] = useState(null);
+	const [editData, setEditData] = useState(null);
 
 	const [loading, setLoading] = useState(true);
 
@@ -136,11 +143,48 @@ const AdminPanel = () => {
 		try {
 			await axios.post(URL + "/api/createTeam", data);
 			setIsCreateTeamWindowOpen(false);
+			const data1 = await axios.get(URL + "/api/getTeams");
+			setPanelData(data1.data.teams);
 			setLoading(false);
 		} catch (e) {
 			console.log("Error: ", e.response.data.error);
 		}
 	};
+
+	const editTeamHandler = async (data) => {
+		setLoading(true);
+
+		try {
+			await axios.post(URL + "/api/editTeam", data);
+			setIsEditTeamWindowOpen(false);
+			const data1 = await axios.get(URL + "/api/getTeams");
+			setPanelData(data1.data.teams);
+			setLoading(false);
+		} catch (e) {
+			console.log("Error: ", e.response.data.error);
+		}
+	};
+
+	// const deleteTeamHandler = async (id) => {
+	// 	setIsConfirmWindowOpen(true);
+
+	// 	const deleteCallback = async () => {
+	// 		setLoading(true);
+
+	// 		try {
+	// 			await axios.post(URL + "/api/deleteTeam", { id });
+	// 			setPanelData((prev) => prev.filter((team) => team.id !== id));
+	// 			setIsConfirmWindowOpen(false);
+	// 			const data = await axios.get(URL + "/api/getTeams");
+	// 			setPanelData(data.data.teams);
+	// 			setLoading(false);
+	// 		} catch (e) {
+	// 			console.log("Error: ", e.response.data.error);
+	// 		}
+	// 	};
+
+	// 	setConfirmAction(() => deleteCallback);
+	// };
 
 	const createOrderHandler = async (data) => {
 		setLoading(true);
@@ -148,10 +192,33 @@ const AdminPanel = () => {
 		try {
 			await axios.post(URL + "/api/createOrder", data);
 			setIsCreateOrderWindowOpen(false);
+			const data1 = await axios.get(URL + "/api/getOrders");
+			setPanelData(data1.data.orders);
 			setLoading(false);
 		} catch (e) {
 			console.log("Error: ", e.response.data.error);
 		}
+	};
+
+	const deleteClientHandler = (id) => {
+		setIsConfirmWindowOpen(true);
+
+		const deleteCallback = async () => {
+			setLoading(true);
+
+			try {
+				await axios.post(URL + "/api/deleteClient", { id });
+				setPanelData((prev) => prev.filter((client) => client.id !== id));
+				setIsConfirmWindowOpen(false);
+				const data = await axios.get(URL + "/api/getClients");
+				setPanelData(data.data.clients);
+				setLoading(false);
+			} catch (e) {
+				console.log("Error: ", e.response.data.error);
+			}
+		};
+
+		setConfirmAction(() => deleteCallback);
 	};
 
 	return (
@@ -251,6 +318,7 @@ const AdminPanel = () => {
 									<div className="item email">Почта</div>
 									<div className="item status">Статус</div>
 									<div className="item isadmin">Является админом</div>
+									<div className="item _delete _empty"></div>
 								</div>
 							</div>
 							<div className="AdminPanel-content-body">
@@ -285,10 +353,34 @@ const AdminPanel = () => {
 											<div className="item isadmin">
 												{item.isadmin ? "Да" : "Нет"}
 											</div>
+											{item.isadmin ? (
+												<div
+													className="item _delete _empty"
+													title="Удалить"
+												></div>
+											) : (
+												<div
+													className="item _delete"
+													title="Удалить"
+													onClick={() => deleteClientHandler(item.id)}
+												></div>
+											)}
 										</div>
 									);
 								})}
 							</div>
+							{isConfirmWindowOpen && (
+								<Window
+									header="Уверены, что хотите удалить клиента?"
+									onClose={() => setIsConfirmWindowOpen(false)}
+								>
+									<Confirm
+										text="Удалить"
+										onSubmit={confirmFunction}
+										onClose={() => setIsConfirmWindowOpen(false)}
+									/>
+								</Window>
+							)}
 						</>
 					)}
 					{activeTab === "teams" && (
@@ -305,12 +397,13 @@ const AdminPanel = () => {
 									<div className="item employees">Сотрудники</div>
 									<div className="item orders">Текущий заказ</div>
 									<div className="item orders">Выполненные заказы</div>
+									<div className="item _edit _empty"></div>
 								</div>
 							</div>
 							<div className="AdminPanel-content-body">
 								{panelData.map((item, index) => {
 									return (
-										<div key={item + index} className="person">
+										<div key={item + index + item.name} className="person">
 											<div className="item number">{index + 1}</div>
 											<div className="item name _default">{item.name}</div>
 											<div
@@ -318,15 +411,28 @@ const AdminPanel = () => {
 												title="Перейти"
 												onClick={() => copyText(item.employees)}
 											>
-												{item.employees.map((name) => (
+												{item.employees.map(({ label }) => (
 													<>
-														<span className="employee">{name}</span>
+														<span
+															key={"employee" + label}
+															className="employee"
+														>
+															{label}
+														</span>
 														<br />
 													</>
 												))}
 											</div>
 											<div className="item orders">{item.currentOrder}</div>
 											<div className="item orders">{item.finishedOrder}</div>
+											<div
+												className="item _edit"
+												title="Изменить"
+												onClick={() => {
+													setEditData({ id: item.id, name: item.name });
+													setIsEditTeamWindowOpen(true);
+												}}
+											></div>
 										</div>
 									);
 								})}
@@ -336,6 +442,30 @@ const AdminPanel = () => {
 										onClose={() => setIsCreateTeamWindowOpen(false)}
 									>
 										<CreateTeam onSubmit={createTeamHandler} />
+									</Window>
+								)}
+								{isEditTeamWindowOpen && (
+									<Window
+										header="Создать команду"
+										onClose={() => setIsEditTeamWindowOpen(false)}
+									>
+										<TeamChange
+											teamId={editData.id}
+											teamName={editData.name}
+											onSubmit={editTeamHandler}
+										/>
+									</Window>
+								)}
+								{isConfirmWindowOpen && (
+									<Window
+										header="Уверены, что хотите удалить команду?"
+										onClose={() => setIsConfirmWindowOpen(false)}
+									>
+										<Confirm
+											text="Удалить"
+											onSubmit={confirmFunction}
+											onClose={() => setIsConfirmWindowOpen(false)}
+										/>
 									</Window>
 								)}
 							</div>
@@ -351,10 +481,12 @@ const AdminPanel = () => {
 								/>
 								<div className="person header">
 									<div className="item name">№</div>
-									<div className="item name">Имя клиента</div>
+									<div className="item name">Название проекта</div>
+									<div className="item name">Стоимость</div>
+									<div className="item name">Описание</div>
 									<div className="item name">Команда</div>
-									<div className="item orders">Срок начала</div>
-									<div className="item orders">Срок окончания</div>
+									<div className="item name">Срок начала</div>
+									<div className="item name">Срок окончания</div>
 								</div>
 							</div>
 							<div className="AdminPanel-content-body">
@@ -365,30 +497,35 @@ const AdminPanel = () => {
 											<div
 												className="item name"
 												title="Скопировать"
-												onClick={() => copyText(item.clientName)}
+												onClick={() => copyText(item.name)}
 											>
-												{item.clientName}
+												{item.name}
+											</div>
+											<div className="item name">{item.amount}</div>
+											<a
+												className="item name"
+												title="Скопировать"
+												onClick={() => copyText(item.linkdescription)}
+												href={item.linkdescription}
+												target="_blank"
+												rel="noreferrer"
+											>
+												{item.linkdescription}
+											</a>
+											<div className="item name">{item.teamName}</div>
+											<div
+												className="item name"
+												title="Скопировать"
+												onClick={() => copyText(item.date_start)}
+											>
+												{item.date_start}
 											</div>
 											<div
-												className="item phone"
+												className="item name"
 												title="Скопировать"
-												onClick={() => copyText(item.teamName)}
+												onClick={() => copyText(item.date_finish)}
 											>
-												{item.teamName}
-											</div>
-											<div
-												className="item email"
-												title="Скопировать"
-												onClick={() => copyText(item.startDate)}
-											>
-												{item.startDate}
-											</div>
-											<div
-												className="item email"
-												title="Скопировать"
-												onClick={() => copyText(item.finishDate)}
-											>
-												{item.finishDate}
+												{item.date_finish}
 											</div>
 										</div>
 									);

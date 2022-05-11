@@ -99,6 +99,30 @@
 						}
 					}
 
+					&._delete {
+						flex: none;
+						width: 30px;
+						height: 30px;
+						cursor: pointer;
+						background: url("/img/delete_30x30.png") no-repeat;
+
+						&._empty {
+							background: none;
+						}
+					}
+
+					&._edit {
+						flex: none;
+						width: 24px;
+						height: 24px;
+						cursor: pointer;
+						background: url("/img/edit_24x24.png") no-repeat;
+
+						&._empty {
+							background: none;
+						}
+					}
+
 					&.employees {
 						flex: 0 0 30%;
 						.employee {

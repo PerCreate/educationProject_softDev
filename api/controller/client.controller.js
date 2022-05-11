@@ -10,6 +10,7 @@ const cookieConfig = () => ({
 	maxAge: expiredDays * 24 * 60 * 60 * 1000,
 	httpOnly: true
 });
+
 class ClientController {
 	async createClient(req, res) {
 		const {
@@ -157,6 +158,26 @@ class ClientController {
 		res.send({ clients: allClients.rows });
 
 	}
+
+	async deleteClient(req, res, next) {
+		const { id } = req.body;
+
+		try {
+			var deletedClient = await db.query(`DELETE FROM client WHERE id=${id}`);
+		} catch (e) {
+			console.log(e);
+		}
+
+		if (!deletedClient) {
+			res.status(400).send({ error: "Something went wrong." });
+			throw new Error("Something went wrong.");
+		}
+
+		res.send({ success: true });
+
+	}
+
+
 }
 
 module.exports = new ClientController();

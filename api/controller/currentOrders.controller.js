@@ -3,7 +3,7 @@ const db = require('../db');
 class CurrentOrders {
 	async createOrder(req, res) {
 		const {
-			linkDescription,
+			linkDescription = "пусто",
 			clientId,
 			startDate,
 			finishDate,
@@ -17,11 +17,12 @@ class CurrentOrders {
 				`INSERT INTO current_orders (linkdescription,client_id,date_start,date_finish,amount,team_id,name) values ($1, $2, $3, $4, $5, $6,$7) RETURNING *`,
 				[linkDescription, clientId, startDate, finishDate, amount, teamId, name]
 			);
+			res.send({ created: true, newOrder: newOrder.rows[0] });
 		} catch (e) {
 			console.log(e);
+			res.status(200).send({ created: true, newOrder: newOrder.rows[0] });
 		}
 
-		res.send({ created: true, newOrder: newOrder.rows[0] });
 	}
 
 	async deleteOrder(req, res) {

@@ -127,6 +127,7 @@ const CreateOrder = ({ onSubmit }) => {
 							clientId: client.value,
 							startDate: startDate.toUTCString(),
 							finishDate: finishDate.toUTCString(),
+							linkDescription: docLink,
 						});
 					}}
 				/>

@@ -8,5 +8,6 @@ router.post('/loginClient', ClientController.loginClient);
 router.get('/logoutClient', ClientController.logoutClient);
 router.get('/checkSession', ClientController.checkSession);
 router.get('/getClients', authorization, ClientController.getClients);
+router.post('/deleteClient', authorization, ClientController.deleteClient);
 
 module.exports = router;

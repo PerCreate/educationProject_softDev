@@ -9,28 +9,70 @@ class Team {
 
 		try {
 			var newTeam = await db.query(`INSERT INTO team (name) values ($1) RETURNING *`, [name]);
+			const newTeamId = newTeam.rows[0].id;
+
+			res.send({ newTeam: newTeam.rows[0] });
 		} catch (e) {
 			console.log(e);
+			res.status(400).send({ newTeam: newTeam.rows[0] });
 		}
-		const newTeamId = newTeam.rows[0].id;
-
-		await db.query(`UPDATE employee SET team_id = ${newTeamId} WHERE id IN(${employees.join(',')})`);
-
-		res.send({ newTeam: newTeam.rows[0] });
 	}
 
 	async deleteTeam(req, res) {
 		const { id } = req.body;
 
-		console.log(req.body);
-		res.send({});
+		// try {
+		// 	await db.query(`UPDATE employee SET team_id = NULL WHERE team_id = ${id}`);
+		// 	await db.query(`UPDATE current_orders SET team_id = NULL WHERE team_id = ${id}`);
+		// 	await db.query(`UPDATE completed_orders SET team_id = NULL WHERE team_id = ${id}`);
+		// 	await db.query(`DELETE FROM team WHERE id = ${id}`);
+		// } catch (e) {
+		// 	console.log(e);
+		// }
+
+		res.send({ successful: true });
 	}
 
-	async updateTeam(req, res) {
+	async editTeam(req, res) {
+		const {
+			name,
+			employees,
+			id,
+			currentOrder
+		} = req.body;
+
+		if (typeof currentOrder !== 'string') res.status(400).send({ error: "Something went wrong." });
+
+		try {
+			await db.query(`UPDATE employee SET team_id = NULL WHERE team_id = ${id}`);
+			employees.length && await db.query(`UPDATE employee SET team_id = ${id} WHERE id IN(${employees.join(',')})`);
+			await db.query(`UPDATE current_orders SET linkdescription = '${currentOrder}' WHERE team_id = ${id}`);
+			await db.query(`UPDATE team SET name = '${name}' WHERE id = ${id}`);
+		} catch (e) {
+			console.log(e);
+		}
+
+		res.send({ successful: true });
+	}
+
+	async getTeam(req, res) {
 		const { id } = req.body;
 
-		console.log(req.body);
-		res.send({});
+		try {
+			var team = await db.query(
+				`SELECT * FROM team WHERE id=${id}`
+			);
+		} catch (e) {
+			console.log(e);
+		}
+
+		if (!team) {
+			res.status(400).send({ error: "Something went wrong." });
+			throw new Error("Something went wrong.");
+		}
+
+		const refTeam = await TeamRefactor(team);
+		res.send({ team: { ...refTeam[0] } });
 	}
 
 	async getTeams(req, res) {
@@ -49,25 +91,32 @@ class Team {
 			throw new Error("Something went wrong.");
 		}
 
-		const refAllTeams = await Promise.all(allTeams.rows.map(async ({ id, name, completed_orders, current_orders }) => {
-			try {
-				var searchedEmployees = await db.query(`SELECT name, position FROM employee WHERE team_id = '${id}'`);
-			} catch (e) {
-				console.log(e);
-			}
-			const employeesNames = searchedEmployees.rows.map(({ name, position }) => `${name} | ${position}`);
+		const refTeams = await TeamRefactor(allTeams);
+		res.send({ teams: refTeams });
+	}
+}
+
+const TeamRefactor = async (allTeams) => {
+	const refAllTeams = await Promise.all(allTeams.rows.map(async ({ id, name }) => {
+		try {
+			var currentOrder = await db.query(
+				`SELECT linkdescription FROM current_orders WHERE team_id=${id}`
+			);
+			const searchedEmployees = await db.query(`SELECT name, position,id FROM employee WHERE team_id = '${id}'`);
+			const employeesNames = searchedEmployees.rows.map(({ name, position, id }) => ({ label: `${name} | ${position}`, value: id }));
 
 			return {
 				id,
 				name,
 				employees: employeesNames,
-				currentOrders: current_orders,
-				finishedOrders: completed_orders
+				currentOrder: currentOrder[0]
 			};
-		}));
+		} catch (e) {
+			console.log(e);
+		}
+	}));
 
-		res.send({ teams: refAllTeams });
-	}
-}
+	return refAllTeams;
+};
 
 module.exports = new Team();
