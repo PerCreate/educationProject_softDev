@@ -413,12 +413,12 @@ const AdminPanel = () => {
 												title="Перейти"
 												onClick={() => copyText(item.employees)}
 											>
-												{item.employees?.map(({ label }) => (
+												{item.employees?.map((employee) => (
 													<div
-														key={"employee" + label}
+														key={"employee" + employee.label}
 														className="employee"
 													>
-														{label}
+														{employee.label}
 													</div>
 												))}
 											</div>
