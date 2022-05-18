@@ -422,17 +422,6 @@ const AdminPanel = () => {
 													</div>
 												))}
 											</div>
-											{/* <a
-												className="item orders"
-												href={item.currentOrder.linkdescription}
-												target="_blank"
-												rel="noreferrer"
-											>
-												{item.currentOrder.linkdescription}
-											</a> */}
-											<div className="item orders">
-												{/* {item.finishedOrder.linkdescription} */}
-											</div>
 											<div
 												className="item _edit"
 												title="Изменить"
