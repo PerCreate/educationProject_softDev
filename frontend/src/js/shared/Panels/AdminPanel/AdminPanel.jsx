@@ -131,6 +131,8 @@ const AdminPanel = () => {
 		try {
 			await axios.post(URL + "/api/createEmployee", data);
 			setIsCreateEmployeeWindowOpen(false);
+			const data1 = await axios.get(URL + "/api/getEmployees");
+			setPanelData(data1.data.employees);
 			setLoading(false);
 		} catch (e) {
 			console.log("Error: ", e.response.data.error);
@@ -318,7 +320,7 @@ const AdminPanel = () => {
 									<div className="item email">Почта</div>
 									<div className="item status">Статус</div>
 									<div className="item isadmin">Является админом</div>
-									<div className="item _delete _empty"></div>
+									{/* <div className="item _delete _empty"></div> */}
 								</div>
 							</div>
 							<div className="AdminPanel-content-body">
@@ -353,7 +355,7 @@ const AdminPanel = () => {
 											<div className="item isadmin">
 												{item.isadmin ? "Да" : "Нет"}
 											</div>
-											{item.isadmin ? (
+											{/* {item.isadmin ? (
 												<div
 													className="item _delete _empty"
 													title="Удалить"
@@ -364,7 +366,7 @@ const AdminPanel = () => {
 													title="Удалить"
 													onClick={() => deleteClientHandler(item.id)}
 												></div>
-											)}
+											)} */}
 										</div>
 									);
 								})}
@@ -420,8 +422,12 @@ const AdminPanel = () => {
 													</div>
 												))}
 											</div>
-											<div className="item orders">{item.currentOrder}</div>
-											<div className="item orders">{item.finishedOrder}</div>
+											<div className="item orders">
+												{item.currentOrder.linkdescription}
+											</div>
+											<div className="item orders">
+												{/* {item.finishedOrder.linkdescription} */}
+											</div>
 											<div
 												className="item _edit"
 												title="Изменить"
@@ -502,7 +508,6 @@ const AdminPanel = () => {
 											<a
 												className="item name"
 												title="Скопировать"
-												onClick={() => copyText(item.linkdescription)}
 												href={item.linkdescription}
 												target="_blank"
 												rel="noreferrer"

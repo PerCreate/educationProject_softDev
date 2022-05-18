@@ -114,7 +114,8 @@ const TeamRefactor = async (allTeams) => {
 				id,
 				name,
 				employees: employeesNames,
-				currentOrder: currentOrder[0]
+				currentOrder: currentOrder.rows[0] || {},
+				// finishedOrder: 
 			};
 		} catch (e) {
 			console.log(e);
