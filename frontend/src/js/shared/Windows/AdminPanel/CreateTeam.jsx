@@ -34,10 +34,6 @@ const CreateTeam = ({ onSubmit }) => {
 		getData();
 	}, []);
 
-	useEffect(() => {
-		console.log(employees);
-	}, [employees]);
-
 	return (
 		<div className="CreateTeam" style={{ width: "450px" }}>
 			<form>

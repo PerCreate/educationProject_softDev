@@ -412,15 +412,12 @@ const AdminPanel = () => {
 												onClick={() => copyText(item.employees)}
 											>
 												{item.employees.map(({ label }) => (
-													<>
-														<span
-															key={"employee" + label}
-															className="employee"
-														>
-															{label}
-														</span>
-														<br />
-													</>
+													<div
+														key={"employee" + label}
+														className="employee"
+													>
+														{label}
+													</div>
 												))}
 											</div>
 											<div className="item orders">{item.currentOrder}</div>
