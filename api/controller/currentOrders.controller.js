@@ -20,9 +20,8 @@ class CurrentOrders {
 			res.send({ created: true, newOrder: newOrder.rows[0] });
 		} catch (e) {
 			console.log(e);
-			res.status(200).send({ created: true, newOrder: newOrder.rows[0] });
+			res.status(200).send({ error: "Something went wrong." });
 		}
-
 	}
 
 	async deleteOrder(req, res) {

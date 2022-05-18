@@ -7,6 +7,11 @@ class Team {
 			employees,
 		} = req.body;
 
+		if (name.length < 5) {
+			res.status(200).send({ error: "Name length cannot be less than 6" });
+			return;
+		}
+
 		try {
 			var newTeam = await db.query(`INSERT INTO team (name) values ($1) RETURNING *`, [name]);
 			const newTeamId = newTeam.rows[0].id;
@@ -14,7 +19,7 @@ class Team {
 			res.send({ newTeam: newTeam.rows[0] });
 		} catch (e) {
 			console.log(e);
-			res.status(400).send({ newTeam: newTeam.rows[0] });
+			res.status(400).send({ error: "Something went wrong." });
 		}
 	}
 
