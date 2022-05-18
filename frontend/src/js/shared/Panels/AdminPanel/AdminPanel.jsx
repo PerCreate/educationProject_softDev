@@ -413,7 +413,7 @@ const AdminPanel = () => {
 												title="Перейти"
 												onClick={() => copyText(item.employees)}
 											>
-												{item.employees.map(({ label }) => (
+												{item.employees?.map(({ label }) => (
 													<div
 														key={"employee" + label}
 														className="employee"
@@ -421,6 +421,17 @@ const AdminPanel = () => {
 														{label}
 													</div>
 												))}
+											</div>
+											<a
+												className="item orders"
+												href={item.currentOrder.linkdescription}
+												target="_blank"
+												rel="noreferrer"
+											>
+												{item.currentOrder.linkdescription}
+											</a>
+											<div className="item orders">
+												{/* {item.finishedOrder.linkdescription} */}
 											</div>
 											<div
 												className="item _edit"
