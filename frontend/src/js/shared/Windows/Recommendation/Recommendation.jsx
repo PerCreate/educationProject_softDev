@@ -1,9 +1,14 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import Button from "../../../UI/Button";
 import Input from "../../../UI/Input";
+import { getURL } from "../../../Utils";
 
-const Recommendation = ({ onSubmit }) => {
+const Recommendation = () => {
+	const [recommendationMessage, setRecommMessage] = useState("");
+	const URL = getURL();
+
 	const [production, setProductionType] = useState([]);
 	const [productionTypes] = useState([
 		{ label: "Продукт/собественность", value: "product" },
@@ -41,9 +46,34 @@ const Recommendation = ({ onSubmit }) => {
 	});
 
 	useEffect(() => {
-		console.log(production, industry, specificTypes);
 		setIndustryType([]);
 	}, [production]);
+
+	const getRecommendation = async (data) => {
+		try {
+			const answer = await axios.post(URL + "/api/getRecommendation", {
+				production: data.production,
+				industry: data.industry,
+				params: data.specificTypes,
+			});
+			console.log(answer);
+			setRecommMessage(
+				`${answer.data.recommendation.standardMessage}${answer.data.recommendation.message}`
+			);
+			// setSignUpWindowState(false);
+		} catch (e) {
+			// setErrorSignUpMessage(e.response.data.error || "Something went wrong.");
+			console.log("Error: ", e.response.data.error);
+		}
+	};
+
+	if (recommendationMessage) {
+		return (
+			<div className="Recommendation" style={{ width: "450px" }}>
+				<p>{recommendationMessage}</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className="Recommendation" style={{ width: "450px" }}>
@@ -121,7 +151,16 @@ const Recommendation = ({ onSubmit }) => {
 						/>
 					</div>
 				)}
-				<Button text="Получить рекомендацию" cb={() => onSubmit({})} />
+				<Button
+					text="Получить рекомендацию"
+					cb={() =>
+						getRecommendation({
+							production: production.value,
+							industry: industry.value,
+							specificTypes,
+						})
+					}
+				/>
 			</form>
 		</div>
 	);

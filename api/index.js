@@ -7,6 +7,7 @@ const applicationRoutes = require('./routes/application.routes');
 const teamsRoutes = require('./routes/team.routes');
 const orderRoutes = require('./routes/currentOrders.routes');
 const employeesRoutes = require('./routes/employee.routes');
+const recommendationRoutes = require('./routes/recommendation.routes');
 
 const PORT = process.env.PORT || 3000;
 
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV === "production") {
 	app.use(express.static("./frontend/build"));
 }
 
-app.use('/api', [clientRoutes, applicationRoutes, teamsRoutes, orderRoutes, employeesRoutes]);
+app.use('/api', [clientRoutes, applicationRoutes, teamsRoutes, orderRoutes, employeesRoutes, recommendationRoutes]);
 
 app.listen(PORT, () => {
 	console.log(PORT);

@@ -42,10 +42,6 @@ const Nav = ({ authReducer, dispatchClientData }) => {
 		setUserData({ email: authReducer.email, isAdmin: authReducer.isAdmin });
 	}, [authReducer]);
 
-	const getRecommendation = (data) => {
-		console.log(data);
-	};
-
 	const URL = getURL();
 
 	const onSignUp = async (userData) => {
@@ -111,7 +107,7 @@ const Nav = ({ authReducer, dispatchClientData }) => {
 					errorMessage={errorLogInMessage}
 					onCloseError={() => setErrorLogInMessage("")}
 				>
-					<Recommendation onSubmit={getRecommendation} />
+					<Recommendation />
 					{isConfirmWindowOpen && (
 						<Window
 							header="Закрыть окно рекомедации?"
