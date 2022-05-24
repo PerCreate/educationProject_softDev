@@ -11,6 +11,8 @@ import LogIn from "./Windows/LogIn/LogIn";
 import SignUp from "./Windows/SignUp/SignUp";
 import Window from "./Windows/Window";
 import { login } from "../redux/actions";
+import Recommendation from "./Windows/Recommendation/Recommendation";
+import Confirm from "./Windows/Confirm/Confirm";
 
 const mapState = (state) => {
 	return state;
@@ -27,6 +29,9 @@ const Nav = ({ authReducer, dispatchClientData }) => {
 	const [isLogInWindowOpen, setLogInWindowState] = useState(false);
 	const [errorLogInMessage, setErrorLogInMessage] = useState("");
 
+	const [isRecommendationWindowOpen, setRecommendationWindowState] = useState(false);
+	const [isConfirmWindowOpen, setIsConfirmWindowOpen] = useState(false);
+
 	const [isAdminPanelOpen, setAdminPanelState] = useState(false);
 	const [userData, setUserData] = useState({
 		email: authReducer.email,
@@ -36,8 +41,6 @@ const Nav = ({ authReducer, dispatchClientData }) => {
 	useEffect(() => {
 		setUserData({ email: authReducer.email, isAdmin: authReducer.isAdmin });
 	}, [authReducer]);
-
-	const getRecommendation = () => {};
 
 	const URL = getURL();
 
@@ -97,6 +100,34 @@ const Nav = ({ authReducer, dispatchClientData }) => {
 					<LogIn onSubmit={onLogIn} />
 				</Window>
 			)}
+			{isRecommendationWindowOpen && (
+				<Window
+					header="Получить быструю рекомендацию"
+					onClose={() => setIsConfirmWindowOpen(true)}
+					errorMessage={errorLogInMessage}
+					onCloseError={() => setErrorLogInMessage("")}
+				>
+					<Recommendation />
+					{isConfirmWindowOpen && (
+						<Window
+							header="Закрыть окно рекомедации?"
+							onClose={() => setIsConfirmWindowOpen(false)}
+							errorMessage={errorLogInMessage}
+							onCloseError={() => setErrorLogInMessage("")}
+						>
+							<Confirm
+								text="Закрыть"
+								closeText="Не закрывать"
+								onSubmit={() => {
+									setIsConfirmWindowOpen(false);
+									setRecommendationWindowState(false);
+								}}
+								onClose={() => setIsConfirmWindowOpen(false)}
+							/>
+						</Window>
+					)}
+				</Window>
+			)}
 
 			<Link to="/" className="Nav-logo"></Link>
 
@@ -144,7 +175,7 @@ const Nav = ({ authReducer, dispatchClientData }) => {
 					</SidePanel>
 				)}
 			</ul>
-			<Button text="Получить рекомендацию" cb={getRecommendation} />
+			<Button text="Получить рекомендацию" cb={() => setRecommendationWindowState(true)} />
 		</nav>
 	);
 };
